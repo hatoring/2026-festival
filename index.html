@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 아이함께 수업 페스티벌</title>
+  <!-- Tailwind CSS 로드 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Jua (귀여운 학교/연말 느낌) & Noto Sans KR -->
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans KR', 'sans-serif'],
+            cute: ['Jua', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* 부드러운 전환 효과 */
+    body {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    /* 은은하게 내리는 눈송이 애니메이션 */
+    @keyframes snowfall {
+      0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+      20% { opacity: 0.7; }
+      80% { opacity: 0.7; }
+      100% { transform: translateY(105vh) translateX(15px); opacity: 0; }
+    }
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+      animation: snowfall linear infinite;
+    }
+    /* 칠판 테두리 느낌의 따뜻한 카드 그림자 */
+    .school-card {
+      box-shadow: 0 6px 0 rgba(180, 83, 9, 0.12);
+    }
+    .dark .school-card {
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-amber-50/80 text-stone-800 dark:bg-emerald-950 dark:text-amber-50 min-h-screen flex flex-col items-center selection:bg-rose-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- 배경 눈송이 장식 영역 -->
+  <div id="snowContainer" aria-hidden="true"></div>
+
+  <!-- 상단 크리스마스 전구 장식 바 -->
+  <div class="w-full bg-gradient-to-r from-rose-600 via-emerald-700 to-rose-600 h-2.5 shadow-xs z-10"></div>
+
+  <!-- 상단 헤더 영역 -->
+  <header class="w-full max-w-2xl px-5 pt-10 pb-6 relative z-10 flex flex-col items-center text-center">
+    <!-- 우측 상단 테마 변경 버튼 (야간/주간 학교 분위기 전환) -->
+    <div class="w-full flex justify-end mb-2">
+      <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 rounded-2xl bg-white/90 dark:bg-emerald-900/80 border-2 border-amber-200 dark:border-emerald-700 shadow-sm hover:scale-105 transition active:scale-95" aria-label="테마 변경" title="낮/밤 분위기 전환">
+        <span id="themeIcon" class="text-lg">🌙</span>
+      </button>
+    </div>
+
+    <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-200 text-xs sm:text-sm font-bold mb-3.5 border border-rose-200 dark:border-rose-800 shadow-2xs">
+      <span>🎄</span>
+      <span>Merry Christmas & Happy Year-End</span>
+      <span>🎅</span>
+    </div>
+
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-cute tracking-wide text-emerald-900 dark:text-amber-100 flex flex-wrap items-center justify-center gap-3 leading-tight">
+      <span class="bg-rose-500 text-white p-2.5 rounded-2xl text-2xl sm:text-3xl shadow-md rotate-[-4deg]">🏫</span>
+      <span>2026 아이함께 수업 페스티벌</span>
+    </h1>
+
+    <p class="text-base sm:text-lg md:text-xl text-amber-900/85 dark:text-emerald-200/95 mt-3.5 font-semibold leading-relaxed">
+      ✨ 따뜻한 연말, 선생님들의 나눔으로 풍성해지는 오늘 🎁
+    </p>
+  </header>
+
+  <!-- 메인 컨테이너 (칠판/게시판 느낌의 따뜻한 프레임) -->
+  <main class="w-full max-w-2xl px-5 flex-1 flex flex-col gap-6 pb-12 relative z-10">
+
+    <div class="bg-white/80 dark:bg-emerald-900/40 backdrop-blur-xs rounded-3xl p-5 sm:p-6 border-2 border-amber-200/80 dark:border-emerald-800 shadow-sm">
+      <div class="flex items-center justify-between mb-4 px-1">
+        <span class="text-xs sm:text-sm font-bold text-emerald-800 dark:text-amber-200 flex items-center gap-1.5">
+          <span>🔔</span> 지부별 나눔 보드 바로가기
+        </span>
+        <span class="text-xs text-amber-700/70 dark:text-emerald-300/70">클릭하면 바로 이동해요!</span>
+      </div>
+
+      <!-- 링크 버튼 그리드 -->
+      <section id="linksGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <!-- 자바스크립트로 동적 생성됨 -->
+      </section>
+    </div>
+
+    <!-- 하단 유틸리티 (새 탭 열기 및 파일 공유) -->
+    <div class="flex flex-wrap justify-center items-center gap-3 text-xs text-amber-900/70 dark:text-emerald-200/70 pt-1">
+      <button onclick="exportHtmlFile()" class="px-3.5 py-2 rounded-xl bg-rose-100/90 dark:bg-rose-900/50 text-rose-800 dark:text-rose-200 border border-rose-200 dark:border-rose-800 font-semibold hover:bg-rose-200/80 dark:hover:bg-rose-800/60 transition shadow-2xs">
+        🎁 공유용 HTML 파일 다운로드
+      </button>
+      <span>•</span>
+      <label class="flex items-center gap-1.5 cursor-pointer hover:text-emerald-800 dark:hover:text-amber-200 font-medium">
+        <input type="checkbox" id="newTabCheck" onchange="toggleNewTabSetting()" class="rounded text-rose-600 focus:ring-rose-500">
+        <span>새 탭에서 열기</span>
+      </label>
+    </div>
+
+  </main>
+
+  <!-- 토스트 메시지 -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-emerald-900 dark:bg-amber-100 text-amber-50 dark:text-emerald-950 text-sm font-medium shadow-lg opacity-0 pointer-events-none transition-opacity duration-300">
+    알림 메시지
+  </div>
+
+  <script>
+    // 6개 지부 웨일스페이스 보드 링크 데이터 (크리스마스 학교 테마 아이콘 & 컬러)
+    const DEFAULT_LINKS = [
+      { name: '밀양지부', url: 'https://edu-teamboard.whalespace.io/boards/cmwt04d8m00cu2gp0irqf26bj?shareToken=J0sVxifVCREz--lM5qxnlwiyJVgzkaqexSaCKD5SSog', icon: '🎄', color: 'emerald' },
+      { name: '김해지부', url: 'https://edu-teamboard.whalespace.io/boards/cmwt00cu500dc2hpi5b7h5g07?shareToken=TR9d5QteukRbas7Pd_18Jx09Ah7iCL-fsx_PnBAyS1s', icon: '🎅', color: 'rose' },
+      { name: '진주지부', url: 'https://edu-teamboard.whalespace.io/boards/cmwszz9t000cs2ipl6vwib4zy?shareToken=7ko4vyOs_qu4-oYkLwmB_ACzG5VKjmg1ANgDW4elLmQ', icon: '⛄', color: 'sky' },
+      { name: '사천지부', url: 'https://edu-teamboard.whalespace.io/boards/cmwt03sa100co2gp0e75r164o?shareToken=LBS-dx4NgAR-BUsjykTCNvCwUvUwK_Yhgp-gX_quvus', icon: '🔔', color: 'amber' },
+      { name: '진해지부', url: 'https://edu-teamboard.whalespace.io/boards/cmwt0393a00ci2gp09gb48bym?shareToken=cA7q6L-uAstoE0vVjx9PWFPVlZV373dGiH8d0jVc1Xs', icon: '🦌', color: 'orange' },
+      { name: '창원지부', url: 'https://edu-teamboard.whalespace.io/boards/cmwszt61900cn2ipl76j37gf0?shareToken=mPCX_W4b9d7dsXlDMJBoBeut2LQL3YZJGvhcsUCScoM', icon: '🎁', color: 'red' }
+    ];
+
+    // 따뜻한 연말/크리스마스 카드 컬러 스타일
+    const COLOR_STYLES = {
+      emerald: 'border-emerald-200 dark:border-emerald-700 hover:border-emerald-400 bg-emerald-50/70 dark:bg-emerald-950/60',
+      rose: 'border-rose-200 dark:border-rose-800 hover:border-rose-400 bg-rose-50/70 dark:bg-rose-950/40',
+      sky: 'border-sky-200 dark:border-sky-800 hover:border-sky-400 bg-sky-50/70 dark:bg-sky-950/40',
+      amber: 'border-amber-200 dark:border-amber-700 hover:border-amber-400 bg-amber-50/80 dark:bg-amber-950/40',
+      orange: 'border-orange-200 dark:border-orange-800 hover:border-orange-400 bg-orange-50/70 dark:bg-orange-950/40',
+      red: 'border-red-200 dark:border-red-800 hover:border-red-400 bg-red-50/70 dark:bg-red-950/40'
+    };
+
+    let openInNewTab = true;
+
+    // 초기화 함수
+    function init() {
+      try {
+        const savedNewTab = localStorage.getItem('festival_newtab');
+        openInNewTab = savedNewTab !== null ? JSON.parse(savedNewTab) : true;
+        document.getElementById('newTabCheck').checked = openInNewTab;
+
+        const savedTheme = localStorage.getItem('festival_theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.getElementById('themeIcon').textContent = '☀️';
+        }
+      } catch (e) {
+        // 기본값 유지
+      }
+      createSnowflakes();
+      renderLinks();
+    }
+
+    // 배경 은은한 눈송이 효과 생성
+    function createSnowflakes() {
+      const container = document.getElementById('snowContainer');
+      const flakes = ['❄️', '✨', '❅'];
+      for (let i = 0; i < 14; i++) {
+        const span = document.createElement('span');
+        span.className = 'snowflake text-sm sm:text-base opacity-60';
+        span.textContent = flakes[i % flakes.length];
+        span.style.left = `${Math.random() * 100}vw`;
+        span.style.animationDuration = `${8 + Math.random() * 10}s`;
+        span.style.animationDelay = `${Math.random() * 8}s`;
+        container.appendChild(span);
+      }
+    }
+
+    // 링크 목록 렌더링
+    function renderLinks() {
+      const grid = document.getElementById('linksGrid');
+      grid.innerHTML = '';
+
+      DEFAULT_LINKS.forEach(item => {
+        const colorClass = COLOR_STYLES[item.color] || COLOR_STYLES.emerald;
+        const targetAttr = openInNewTab ? 'target="_blank" rel="noopener noreferrer"' : '';
+
+        const card = document.createElement('div');
+        card.className = `group rounded-2xl border-2 school-card transition-all duration-200 hover:-translate-y-1 ${colorClass}`;
+
+        card.innerHTML = `
+          <a href="${escapeHtml(item.url)}" ${targetAttr} 
+            class="p-5 flex flex-col items-center text-center h-full justify-center rounded-2xl active:scale-95 transition-transform">
+            <span class="text-4xl mb-2.5 group-hover:scale-115 group-hover:rotate-6 transition-transform">${item.icon || '🎄'}</span>
+            <span class="font-cute text-lg sm:text-xl tracking-wide text-stone-800 dark:text-amber-50">${escapeHtml(item.name)}</span>
+            <span class="mt-1.5 inline-block px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-white/80 dark:bg-black/25 text-stone-600 dark:text-amber-200/80">
+              입장하기 →
+            </span>
+          </a>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    // 공유용 HTML 파일 다운로드
+    function exportHtmlFile() {
+      try {
+        // 동적으로 생성된 눈송이와 버튼 목록을 잠시 비운 뒤 깨끗한 원본 구조만 저장
+        const snowContainer = document.getElementById('snowContainer');
+        const linksGrid = document.getElementById('linksGrid');
+        const savedSnow = snowContainer.innerHTML;
+        const savedGrid = linksGrid.innerHTML;
+
+        snowContainer.innerHTML = '';
+        linksGrid.innerHTML = '';
+
+        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+        // 화면 원상복구
+        snowContainer.innerHTML = savedSnow;
+        linksGrid.innerHTML = savedGrid;
+
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('🎁 깨끗한 index.html 파일이 다운로드되었습니다!');
+      } catch (e) {
+        showToast('파일 다운로드 중 오류가 발생했습니다.');
+      }
+    }
+
+    // 새 탭 열기 설정 저장
+    function toggleNewTabSetting() {
+      openInNewTab = document.getElementById('newTabCheck').checked;
+      localStorage.setItem('festival_newtab', JSON.stringify(openInNewTab));
+      renderLinks();
+    }
+
+    // 테마(낮/밤 학교 분위기) 토글
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('festival_theme', isDark ? 'dark' : 'light');
+    }
+
+    // 토스트 알림 표시
+    let toastTimer;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.remove('opacity-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 2500);
+    }
+
+    // XSS 방지용 이스케이프 함수
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // 페이지 로드 시 실행
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
